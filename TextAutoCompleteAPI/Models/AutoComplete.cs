@@ -2,7 +2,7 @@
 {
     public class AutoComplete
     {
-        private string Input;
+        public string Input { get; set; }
 
         public string getInput()
         {
