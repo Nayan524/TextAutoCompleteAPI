@@ -13,24 +13,28 @@ namespace TextAutoCompleteAPI.Controllers
     [ApiController]
     public class AutoCompleteController : ControllerBase
     {
+        //Declare the Interface 
         private readonly IAutoCompleteService _autoCompleteService;
 
+        //Constructor Dependency Injection to instantaite AutoCompleteServiceAPI.cs
         public AutoCompleteController(IAutoCompleteService autoCompleteService)
         {
             _autoCompleteService = autoCompleteService;
         }
 
+        //Define Method to accept POST request and will map the payload to Model class object. 
         [HttpPost]
         public async Task<IActionResult> CreateAuto([FromBody] AutoComplete auto)
 
         {
-            Console.WriteLine(auto.GetInput());
+            //Adding validation for user input. 
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
             try
             {
+                //Calling the Service Layer method to fetch suggestions. 
                 var suggestions = await _autoCompleteService.GetSuggestions(auto);
                 return Ok(new { suggestions });
 
