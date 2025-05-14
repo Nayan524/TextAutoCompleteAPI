@@ -87,6 +87,11 @@ This endpoint accepts a JSON payload with a user input string and returns a list
 
 > Interfaces help with **loose coupling** and **testability**, which are key principles in clean software design.
 
+### 🔹 Implementing In-Memory Caching
+
+- ✅ To improve performance and reduce unnecessary external API calls, in-memory caching was implemented using IMemoryCache provided by ASP.NET Core.
+- ✅ Store frequently requested suggestions temporarily in memory and minimize redundant network requests for the same user input
+
 ### 🔹 Asynchronous Programming
 
 - All key methods use **`async`/`await`** and return **`Task<T>`**. For example:  
