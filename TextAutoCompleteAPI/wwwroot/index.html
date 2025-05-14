@@ -47,12 +47,14 @@
             const results = document.getElementById('results');
             results.innerHTML = "";
 
+            //Checking if prompt entered by user is empty. 
             if (!input) {
                 results.innerHTML = "<div class='alert alert-warning'>Please enter some text.</div>";
                 return;
             }
 
             try {
+                //Fetching the response from Backend REST API. 
                 const response = await fetch("http://localhost:5093/api/auto", {
                     method: "POST",
                     headers: {
@@ -60,7 +62,7 @@
                     },
                     body: JSON.stringify({ input: input })
                 });
-
+                //To verify if returned response is sucessful or not. 
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
                 }
