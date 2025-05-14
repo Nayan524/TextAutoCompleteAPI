@@ -1,4 +1,19 @@
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using OpenAI.Extensions;
+using System.Diagnostics;
+using TextAutoCompleteAPI.Services;
+
+
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddScoped<IAutoCompleteService, AutoCompleteServiceAPI>();
+
+
+builder.Services.AddOpenAIService(options =>
+{
+    options.ApiKey = builder.Configuration["OpenAIServiceOptions:ApiKey"];
+});
 
 // Add services to the container.
 
@@ -7,6 +22,9 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -14,9 +32,19 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+
+
+    var swaggerUrl = "http://localhost:5093/swagger";
+    System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+    {
+        FileName = swaggerUrl,
+        UseShellExecute = true
+    });
 }
 
 app.UseHttpsRedirection();
+
+app.UseStaticFiles();
 
 app.UseAuthorization();
 
