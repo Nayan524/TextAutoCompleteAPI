@@ -17,6 +17,49 @@ A simple ASP.NET Core Web API that accepts user input and returns auto-complete 
 
 ---
 
+## API Documentation
+
+The API uses Swagger for documenting and testing the endpoints.
+
+### Accessing Swagger UI
+
+Once the application is running, navigate to the following URL in your browser:
+
+```
+http://localhost:5093/swagger
+```
+
+This interface provides detailed information on available API endpoints, required request formats, and example responses.
+
+### API Endpoints
+
+#### `POST /api/auto`
+
+This endpoint accepts a JSON payload with a user input string and returns a list of autocomplete suggestions.
+
+**Request Body:**
+```json
+{
+  "input": "how are"
+}
+```
+
+**Response:**
+```json
+{
+  "suggestions": [
+    "you",
+    "you doing",
+    "you today",
+    ...
+  ]
+}
+```
+
+- The endpoint includes input validation (minimum 3 characters, maximum 100 characters).
+- Suggestions are retrieved from the Datamuse API and optionally cached.
+
+
 ## 🧩 Key Design Choices
 
 ### 🔹 Layered Architecture
@@ -58,6 +101,10 @@ A simple ASP.NET Core Web API that accepts user input and returns auto-complete 
 > Using `async/await` with `Task` improves **responsiveness** and **resource efficiency**, especially in web APIs.
 
 ---
+
+## Sample UI Output
+
+![Autocomplete UI](assets/UI.png)
 
 
 
