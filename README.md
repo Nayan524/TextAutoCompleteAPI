@@ -81,7 +81,7 @@ This endpoint accepts a JSON payload with a user input string and returns a list
   Defines the contract for the auto-complete suggestion service. Implemented by `AutoCompleteServiceAPI`.  
   ✅ Allows for easy testing, mocking, and swapping of service implementations.
 
-- **ICustomLoggerService** *(if implemented)*:  
+- **ILoggerService**:  
   Provides a standard way to log API usage and validation results to a file.  
   ✅ Abstracting logging allows you to switch between different logging targets (file, database, cloud, etc.) without changing business logic.
 
@@ -104,7 +104,7 @@ This endpoint accepts a JSON payload with a user input string and returns a list
 
 ## Sample UI Output
 
-![Autocomplete UI](assets/UI.png)
+![Autocomplete UI](TextAutoCompleteAPI/assets/UI.png)
 
 
 
