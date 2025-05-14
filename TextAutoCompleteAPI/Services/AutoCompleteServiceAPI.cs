@@ -2,42 +2,59 @@
 using OpenAI.Interfaces;
 using OpenAI.ObjectModels.RequestModels;
 using TextAutoCompleteAPI.Models;
+using System.Net.Http;
+using System.Text.Json;
 
 namespace TextAutoCompleteAPI.Services
 {
-    public class AutoCompleteServiceAPI : AutoCompleteService
+    public class AutoCompleteServiceAPI : IAutoCompleteService
     {
 
-        private readonly IOpenAIService _configuration;
+        //Declaring HttpClient to call NLP Service
+        private readonly HttpClient _httpClient;
 
-        public ValuesController(IOpenAIService configuration)
+        //Below is known as Constructor Dependency Injection which creates instance of HttpClient at runtime. 
+        public AutoCompleteServiceAPI(HttpClient httpClient)
         {
-            _configuration = configuration;
+            _httpClient = httpClient;
         }
 
-        public async Task<List<string>> GetSuggestionsAsync(AutoComplete auto)
+        //Defining the method to process the user prompt and returing the suggestions
+        public async Task<List<string>> GetSuggestions(AutoComplete auto)
         {
-            var completionRequest = new ChatCompletionCreateRequest
+            var prompt = Uri.EscapeDataString(auto.GetInput());
+            var url = $"https://api.datamuse.com/sug?s={prompt}";
+
+            var response = await _httpClient.GetAsync(url);
+
+            if (!response.IsSuccessStatusCode)
+                throw new Exception("Failed to get suggestions");
+
+            //Fetching the response from API
+            var json = await response.Content.ReadAsStringAsync();   
+              
+
+            var results = JsonSerializer.Deserialize<List<Response>>(json, new JsonSerializerOptions
             {
-                Messages = new List<ChatMessage> {
+                PropertyNameCaseInsensitive = true
+            });
 
-                    ChatMessage.FromSystem("You are an autocomplete suggestion engine."),
-                    ChatMessage.FromUser($"Provide 4 autocomplete suggestions for: \"{auto.GetInput}\"")
+            //To verify if API returned the results or not
+            if (results != null)
+            {
+                foreach (var item in results)
+                {
+                    Console.WriteLine($"Word: {item.Word}, Score: {item.Score}");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Results is null");
+            }
 
-
-                },
-                Model = "gpt-3.5-turbo",
-                MaxTokens = 50,
-                Temperature = 0.7f
-            };
-            var response = await _configuration.ChatCompletion.CreateCompletion(completionRequest);
-            if (!response.Successful)
-                return StatusCode((int)response.HttpStatusCode, response.Error?.Message);
-
-            var suggestion = response.Choices?.FirstOrDefault()?.Message?.Content;
-            return suggestion?
-                .Split('\n', StringSplitOptions.RemoveEmptyEntries)
-                .Select(s => s.Trim())
+            return results?
+                .Select(r => r.Word)
+                .Take(5)
                 .ToList() ?? new List<string>();
 
         }
