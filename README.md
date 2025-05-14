@@ -83,7 +83,7 @@ This endpoint accepts a JSON payload with a user input string and returns a list
 
 - **ILoggerService**:  
   Provides a standard way to log API usage and validation results to a file.  
-  ✅ Abstracting logging allows you to switch between different logging targets (file, database, cloud, etc.) without changing business logic.
+  ✅ Abstracting logging allows you to switch between different logging targets (file, database, cloud, etc.) without changing business logic. Logs folder will be created in current working directory. 
 
 > Interfaces help with **loose coupling** and **testability**, which are key principles in clean software design.
 
