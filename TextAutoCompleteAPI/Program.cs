@@ -4,10 +4,12 @@ using Microsoft.Extensions.Hosting;
 using OpenAI.Extensions;
 using System.Diagnostics;
 using TextAutoCompleteAPI.Services;
+using Microsoft.Extensions.Caching.Memory;
 
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddScoped<IAutoCompleteService, AutoCompleteServiceAPI>();
+builder.Services.AddMemoryCache();
 
 
 builder.Services.AddOpenAIService(options =>
@@ -21,7 +23,7 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
+builder.Services.AddScoped<ILoggerService, LoggerService>();
 
 
 
